@@ -22,11 +22,4 @@ public class WebConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginMemberArgumentResolver);
     }
-
-    @Bean
-    public RestTemplate restTemplate(RestTemplateResponseErrorHandler errorHandler) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(errorHandler);
-        return restTemplate;
-    }
 }
