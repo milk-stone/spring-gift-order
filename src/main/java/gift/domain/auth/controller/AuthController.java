@@ -1,5 +1,6 @@
 package gift.domain.auth.controller;
 
+import gift.domain.auth.dto.KakaoLoginRequest;
 import gift.domain.auth.dto.LoginRequest;
 import gift.domain.auth.dto.SignInRequest;
 import gift.domain.auth.dto.TokenResponse;
@@ -29,5 +30,11 @@ public class AuthController {
     @PostMapping("/login")
     private ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/oauth/kakao/login")
+    public ResponseEntity<TokenResponse> kakaoLogin(@RequestBody KakaoLoginRequest request) {
+        TokenResponse tokenResponse = authService.kakaoLogin(request.code());
+        return ResponseEntity.ok().body(tokenResponse);
     }
 }
