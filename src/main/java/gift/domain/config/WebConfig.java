@@ -1,7 +1,9 @@
 package gift.domain.config;
 
 import gift.domain.resolver.LoginMemberArgumentResolver;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,5 +21,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginMemberArgumentResolver);
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateResponseErrorHandler errorHandler) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(errorHandler);
+        return restTemplate;
     }
 }
