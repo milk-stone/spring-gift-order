@@ -86,4 +86,11 @@ public class GlobalExceptionHandler {
         SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ExternalApiException.class)
+    public ResponseEntity<SingleErrorResponse> handleExternalApiException(ExternalApiException e) {
+        log.error("외부 API 사용 중 문제가 발생했습니다.");
+        SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_GATEWAY);
+    }
 }
