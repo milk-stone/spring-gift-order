@@ -75,21 +75,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WishNotFoundException.class)
     public ResponseEntity<SingleErrorResponse> handleWishNotFoundException(WishNotFoundException e) {
-        log.warn("해당 위시리스트가 존재하지 않습니다.");
+        log.warn("해당 위시리스트가 존재하지 않음 : {}", e.getMessage());
         SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<SingleErrorResponse> handleProductNotFoundException(ProductNotFoundException e) {
-        log.warn("해당 상품은 존재하지 않습니다.");
+        log.warn("해당 상품은 존재하지 않음 : {}", e.getMessage());
         SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(ExternalApiException.class)
     public ResponseEntity<SingleErrorResponse> handleExternalApiException(ExternalApiException e) {
-        log.error("외부 API 사용 중 문제가 발생했습니다.");
+        log.error("외부 API 사용 중 문제 발생 : {}", e.getMessage());
         SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(errorResponse);
     }
