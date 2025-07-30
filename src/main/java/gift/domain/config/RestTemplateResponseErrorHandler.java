@@ -1,5 +1,7 @@
 package gift.domain.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
@@ -13,6 +15,7 @@ import java.net.URI;
 
 @Component
 public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
+    private static final Logger log = LoggerFactory.getLogger(RestTemplateResponseErrorHandler.class);
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
@@ -26,23 +29,13 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
         String body = new String(response.getBody().readAllBytes());
 
         if (statusCode.is4xxClientError()) {
-            System.out.println("클라이언트 에러 - " +
-                    "URL: {" + url + "}, " +
-                    "Method: {" + method + "}, " +
-                    "Status: {" + statusCode + "} - " +
-                    "ResponseBody: {" + body + "}"
-            );
+            log.error("클라이언트 에러 - URL: {}, Method: {}, Status: {} - ResponseBody: {}", url, method, statusCode, body);
             throw new HttpClientErrorException(statusCode, response.getStatusText(),
                     response.getHeaders(), body.getBytes(), null);
         }
 
         if (statusCode.is5xxServerError()) {
-            System.out.println("서버 에러 - " +
-                    "URL: {" + url + "}, " +
-                    "Method: {" + method + "}, " +
-                    "Status: {" + statusCode + "} - " +
-                    "ResponseBody: {" + body + "}"
-            );
+            log.error("서버 에러 - URL: {}, Method: {}, Status: {} - ResponseBody: {}", url, method, statusCode, body);
             throw new HttpServerErrorException(statusCode, response.getStatusText(),
                     response.getHeaders(), body.getBytes(), null);
         }
