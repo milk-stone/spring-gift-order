@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class KakaoProperties {
     private String clientId;
     private String redirectUri;
+    private String authBaseUrl;
+    private String apiBaseUrl;
 
     public String getClientId() {
         return clientId;
@@ -17,11 +19,27 @@ public class KakaoProperties {
         return redirectUri;
     }
 
+    public String getAuthBaseUrl() {
+        return authBaseUrl;
+    }
+
+    public String getApiBaseUrl() {
+        return apiBaseUrl;
+    }
+
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 
     public void setRedirectUri(String redirectUri) {
         this.redirectUri = redirectUri;
+    }
+
+    public void setAuthBaseUrl(String authBaseUrl) {
+        this.authBaseUrl = authBaseUrl;
+    }
+
+    public void setApiBaseUrl(String apiBaseUrl) {
+        this.apiBaseUrl = apiBaseUrl;
     }
 }

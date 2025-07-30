@@ -15,9 +15,6 @@ import java.util.Objects;
 
 @Service
 public class KakaoApiService {
-    private static final String KAKAO_AUTH_BASE_URL = "https://kauth.kakao.com/oauth";
-    private static final String KAKAO_API_BASE_URL = "https://kapi.kakao.com/v2/user";
-
     private final RestTemplate restTemplate;
     private final KakaoProperties kakaoProperties;
 
@@ -27,7 +24,7 @@ public class KakaoApiService {
     }
 
     public KakaoTokenResponse getAccessToken(String authorizationCode) {
-        String url = KAKAO_AUTH_BASE_URL + "/token";
+        String url = kakaoProperties.getAuthBaseUrl() + "/token";
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
@@ -48,7 +45,7 @@ public class KakaoApiService {
     }
 
     public KakaoUserResponse getUserInfo(String accessToken) {
-        String baseUrl = KAKAO_API_BASE_URL + "/me";
+        String baseUrl = kakaoProperties.getApiBaseUrl() + "/me";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
 
