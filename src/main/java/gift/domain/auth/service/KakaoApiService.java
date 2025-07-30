@@ -23,6 +23,16 @@ public class KakaoApiService {
         this.kakaoProperties = kakaoProperties;
     }
 
+    public String buildAuthUrl() {
+        return UriComponentsBuilder.fromUriString(kakaoProperties.getAuthBaseUrl())
+                .path("/authorize")
+                .queryParam("response_type", "code")
+                .queryParam("client_id", kakaoProperties.getClientId())
+                .queryParam("redirect_uri", kakaoProperties.getRedirectUri())
+                .build()
+                .toUriString();
+    }
+
     public KakaoTokenResponse getAccessToken(String authorizationCode) {
         String url = kakaoProperties.getAuthBaseUrl() + "/token";
         HttpHeaders headers = new HttpHeaders();

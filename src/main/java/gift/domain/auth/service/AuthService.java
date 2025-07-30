@@ -84,4 +84,8 @@ public class AuthService {
         return new TokenResponse(accessToken);
 
     }
+
+    public String buildAuthUrl() {
+        return kakaoApiService.buildAuthUrl();
+    }
 }
