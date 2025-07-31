@@ -5,15 +5,14 @@ import gift.domain.auth.dto.SignInRequest;
 import gift.domain.auth.dto.TokenResponse;
 import gift.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("/api/members")
 public class AuthController {
     private final AuthService authService;
 
@@ -21,13 +20,29 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/api/members/register")
     private ResponseEntity<TokenResponse> signInAndLogin(@RequestBody @Valid SignInRequest signInRequest) {
         return new ResponseEntity<>(authService.signIn(signInRequest), HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/members/login")
     private ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/kakao")
+    public ResponseEntity<Void> redirectToKakao() {
+        String kakaoAuthUrl = authService.buildAuthUrl();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(kakaoAuthUrl));
+
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<TokenResponse> kakaoLogin(@RequestParam("code") String code) {
+        TokenResponse tokenResponse = authService.kakaoLogin(code);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 }

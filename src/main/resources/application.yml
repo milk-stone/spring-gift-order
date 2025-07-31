@@ -1,0 +1,39 @@
+spring:
+  config:
+    import: optional:file:dev.env[.properties]
+  application:
+    name: spring-gift
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:gift
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  sql:
+    init:
+      data-locations: classpath:data.sql
+      mode: always
+
+jwt:
+  secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
+  expiration-in-ms: 3600000
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE
+
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  auth-base-url: ${KAKAO_AUTH_BASE_URL}
+  api-base-url: ${KAKAO_API_BASE_URL}

@@ -1,8 +1,6 @@
 package gift.domain.auth.service;
 
-import gift.domain.auth.dto.LoginRequest;
-import gift.domain.auth.dto.SignInRequest;
-import gift.domain.auth.dto.TokenResponse;
+import gift.domain.auth.dto.*;
 import gift.domain.auth.jwt.JwtProvider;
 import gift.domain.member.Member;
 import gift.domain.member.repository.MemberRepository;
@@ -10,6 +8,7 @@ import gift.global.exception.BadRequestException;
 import gift.global.exception.LoginFailedException;
 import gift.global.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,10 +16,12 @@ import java.util.Optional;
 public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
+    private final KakaoApiService kakaoApiService;
 
-    public AuthService(MemberRepository memberRepository, JwtProvider jwtProvider) {
+    public AuthService(MemberRepository memberRepository, JwtProvider jwtProvider, KakaoApiService kakaoApiService) {
         this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
+        this.kakaoApiService = kakaoApiService;
     }
 
     public TokenResponse signIn(SignInRequest signInRequest) {
@@ -62,5 +63,29 @@ public class AuthService {
             throw new MemberNotFoundException("MemberService : validateToken() failed - Member with email " + email + " not found");
         }
         return memberRepository.findByEmail(email);
+    }
+
+    @Transactional
+    public TokenResponse kakaoLogin(String code) {
+        KakaoTokenResponse tokenResponse = kakaoApiService.getAccessToken(code);
+        KakaoUserResponse userResponse = kakaoApiService.getUserInfo(tokenResponse.accessToken());
+
+        String email = userResponse.kakaoAccount().email();
+        String nickname = userResponse.kakaoAccount().profile().nickname();
+
+        if (!memberRepository.existsByEmail(email)) {
+            Member member = new Member(email, "password", nickname);
+            memberRepository.save(member);
+        }
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("AuthService : kakaoLogin() failed - Member not found"));
+
+        String accessToken = jwtProvider.generateToken(member);
+
+        return new TokenResponse(accessToken);
+
+    }
+
+    public String buildAuthUrl() {
+        return kakaoApiService.buildAuthUrl();
     }
 }
