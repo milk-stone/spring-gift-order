@@ -80,7 +80,7 @@ public class AuthService {
         } else {
             member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("AuthService : kakaoLogin() failed - Member not found"));
         }
-
+        member.setKakaoAccessToken(tokenResponse.accessToken());
         String accessToken = jwtProvider.generateToken(member);
 
         return new TokenResponse(accessToken);
