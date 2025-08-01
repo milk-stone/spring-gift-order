@@ -14,3 +14,9 @@ INSERT INTO product (name, price, image_url) VALUES
 INSERT INTO member (email, password, name, role) VALUES
     ('admin', 'admin', '김철수', 1),
     ('abcd@gmail.com', '1234', '이천수', 0);
+
+INSERT INTO option (name, quantity, product_id) VALUES
+    ('RED', 100, 1),
+    ('BLUE', 50, 1),
+    ('YELLOW', 100, 2),
+    ('PURPLE', 50, 2);
