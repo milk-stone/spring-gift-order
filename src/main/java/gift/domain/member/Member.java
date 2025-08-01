@@ -16,6 +16,7 @@ public class Member {
     private String password;
     private String name;
     private RoleType role;
+    private String kakaoAccessToken;
 
     @OneToMany(mappedBy = "member")
     private final List<Wish> wishList = new ArrayList<>();
@@ -83,5 +84,13 @@ public class Member {
 
     public static Member createAdminForTest(String email) {
         return new Member(email, "testPassword", "관리자", RoleType.ADMIN);
+    }
+
+    public String getKakaoAccessToken() {
+        return kakaoAccessToken;
+    }
+
+    public void setKakaoAccessToken(String accessToken) {
+        this.kakaoAccessToken = accessToken;
     }
 }
