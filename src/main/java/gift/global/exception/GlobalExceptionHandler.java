@@ -93,4 +93,11 @@ public class GlobalExceptionHandler {
         SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(errorResponse);
     }
+
+    @ExceptionHandler(OptionNotFoundException.class)
+    public ResponseEntity<SingleErrorResponse> handleOptionNotFoundException(OptionNotFoundException e) {
+        log.error("해당 옵션은 존재하지 않음 : {}", e.getMessage());
+        SingleErrorResponse errorResponse = new SingleErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 }

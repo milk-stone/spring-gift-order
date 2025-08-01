@@ -73,12 +73,14 @@ public class AuthService {
         String email = userResponse.kakaoAccount().email();
         String nickname = userResponse.kakaoAccount().profile().nickname();
 
+        Member member;
         if (!memberRepository.existsByEmail(email)) {
-            Member member = new Member(email, "password", nickname);
+            member = new Member(email, "password", nickname);
             memberRepository.save(member);
+        } else {
+            member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("AuthService : kakaoLogin() failed - Member not found"));
         }
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("AuthService : kakaoLogin() failed - Member not found"));
-
+        member.setKakaoAccessToken(tokenResponse.accessToken());
         String accessToken = jwtProvider.generateToken(member);
 
         return new TokenResponse(accessToken);

@@ -32,12 +32,10 @@ public class AuthController {
 
     @GetMapping("/auth/kakao")
     public ResponseEntity<Void> redirectToKakao() {
-        String kakaoAuthUrl = authService.buildAuthUrl();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(kakaoAuthUrl));
-
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .location(URI.create(authService.buildAuthUrl()))
+                .build();
     }
 
     @GetMapping("/")
