@@ -55,7 +55,7 @@ public class KakaoApiService {
     }
 
     public KakaoUserResponse getUserInfo(String accessToken) {
-        String baseUrl = kakaoProperties.getApiBaseUrl() + "/me";
+        String baseUrl = kakaoProperties.getApiBaseUrl() + "/user/me";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
 
