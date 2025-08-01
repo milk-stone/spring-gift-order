@@ -18,7 +18,7 @@ public class Member {
     private RoleType role;
     private String kakaoAccessToken;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private final List<Wish> wishList = new ArrayList<>();
 
     protected Member() {

@@ -10,20 +10,28 @@ import gift.domain.order.dto.OrderResponse;
 import gift.domain.order.repository.OrderRepository;
 import gift.domain.product.Option;
 import gift.domain.product.repository.OptionRepository;
+import gift.domain.wish.repository.WishRepository;
+import gift.global.exception.GlobalExceptionHandler;
 import gift.global.exception.OptionNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     private final OrderRepository orderRepository;
     private final KakaoApiService kakaoApiService;
     private final OptionRepository optionRepository;
+    private final WishRepository wishRepository;
 
-    public OrderService(OrderRepository orderRepository, KakaoApiService kakaoApiService, OptionRepository optionRepository) {
+    public OrderService(OrderRepository orderRepository, KakaoApiService kakaoApiService, OptionRepository optionRepository, WishRepository wishRepository) {
         this.orderRepository = orderRepository;
         this.kakaoApiService = kakaoApiService;
         this.optionRepository = optionRepository;
+        this.wishRepository = wishRepository;
     }
 
     @Transactional
@@ -47,6 +55,9 @@ public class OrderService {
 
         kakaoApiService.postSelfKakaoTalk(member.getKakaoAccessToken(), message);
 
+        log.info("삭제될 위시리스트 항목: {}", member.getWishList());
+        member.getWishList().removeIf(wish -> wish.getProduct().getId().equals(option.getProduct().getId()));
+        log.info("삭제 완료 후 위시리스트: {}", member.getWishList());
         return OrderResponse.from(order);
     }
 }

@@ -12,7 +12,8 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "option_id")
     private Option option;
     private int quantity;
     private LocalDateTime orderDateTime;
