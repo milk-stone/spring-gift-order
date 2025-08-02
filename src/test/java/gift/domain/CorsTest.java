@@ -25,9 +25,9 @@ public class CorsTest {
         String allowedOrigin = "http://localhost:3000";
 
         mockMvc.perform(
-                        options("api/products")
+                        options("/api/products")
                                 .header(HttpHeaders.ORIGIN, allowedOrigin)
-                                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "GET")
+                                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
                 )
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, allowedOrigin))
